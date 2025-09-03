@@ -1,108 +1,101 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { api } from '../services/api';
-import { Student, ProgressReport } from '../types';
-import TartiliForm from './IqroForm';
-import SurahForm from './SurahForm';
-import ProgressCard from './ProgressCard';
-import Card from './ui/Card';
+import { Student } from '../types';
+import DailyInputView from './DailyInputView';
+import StudentSummaryDashboard from './StudentSummaryDashboard';
+import StudentManagement from './StudentManagement';
+
+type Tab = 'daily' | 'summary' | 'manage';
 
 const TeacherDashboard: React.FC = () => {
     const { user } = useAuth();
     const [students, setStudents] = useState<Student[]>([]);
-    const [selectedStudent, setSelectedStudent] = useState<Student | null>(null);
-    const [progress, setProgress] = useState<ProgressReport[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [activeTab, setActiveTab] = useState<Tab>('summary');
 
-    const fetchStudents = useCallback(async () => {
+    const fetchStudents = useCallback(async (showLoading = true) => {
         if (user) {
+            if (showLoading) setIsLoading(true);
             try {
                 const studentList = await api.getStudentsByTeacher(user.id);
                 setStudents(studentList);
-                if (studentList.length > 0) {
-                    setSelectedStudent(studentList[0]);
-                }
             } catch (error) {
                 console.error("Failed to fetch students", error);
             } finally {
-                setIsLoading(false);
+                if (showLoading) setIsLoading(false);
             }
         }
     }, [user]);
-
-    const fetchProgress = useCallback(async () => {
-        if (selectedStudent) {
-            setIsLoading(true);
-            try {
-                const progressReports = await api.getProgressByStudent(selectedStudent.id);
-                setProgress(progressReports);
-            } catch (error) {
-                console.error("Failed to fetch progress", error);
-            } finally {
-                setIsLoading(false);
-            }
-        }
-    }, [selectedStudent]);
 
     useEffect(() => {
         fetchStudents();
     }, [fetchStudents]);
 
-    useEffect(() => {
-        if (selectedStudent) {
-            fetchProgress();
+    const renderContent = () => {
+        if (isLoading) {
+            return <div className="text-center p-8 text-slate-500">Memuat data siswa...</div>;
         }
-    }, [selectedStudent, fetchProgress]);
 
-    const handleStudentChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        const student = students.find(s => s.id === e.target.value);
-        setSelectedStudent(student || null);
+        switch (activeTab) {
+            case 'daily':
+                return <DailyInputView students={students} />;
+            case 'summary':
+                return <StudentSummaryDashboard students={students} teacherId={user!.id} />;
+            case 'manage':
+                return <StudentManagement students={students} teacherId={user!.id} onDataChange={() => fetchStudents(false)} />;
+            default:
+                return null;
+        }
     };
-
-    const handleReportAdded = (newReport: ProgressReport) => {
-        setProgress(prev => [newReport, ...prev]);
-    };
+    
+    const TabButton: React.FC<{tabName: Tab, label: string, icon: JSX.Element}> = ({tabName, label, icon}) => (
+         <button
+            onClick={() => setActiveTab(tabName)}
+            className={`flex items-center space-x-2 px-3 py-3 text-sm font-medium border-b-2 transition-colors duration-150 ${
+                activeTab === tabName
+                    ? 'border-teal-500 text-teal-600'
+                    : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'
+            }`}
+        >
+            {icon}
+            <span>{label}</span>
+        </button>
+    );
 
     return (
-        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-1 space-y-8">
-                <Card>
-                    <h2 className="text-xl font-bold mb-4">Pilih Siswa</h2>
-                    <select
-                        onChange={handleStudentChange}
-                        value={selectedStudent?.id || ''}
-                        className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-teal-500 focus:border-teal-500"
-                    >
-                        {students.map(s => (
-                            <option key={s.id} value={s.id}>{s.fullName} - Kelas {s.class}</option>
-                        ))}
-                    </select>
-                </Card>
-                {selectedStudent && user && (
-                    <>
-                        <TartiliForm student={selectedStudent} teacherId={user.id} onReportAdded={handleReportAdded} />
-                        <SurahForm student={selectedStudent} teacherId={user.id} onReportAdded={handleReportAdded} />
-                    </>
-                )}
+        <div className="max-w-7xl mx-auto space-y-6">
+            <div className="border-b border-slate-200">
+                <nav className="-mb-px flex space-x-4" aria-label="Tabs">
+                    <TabButton tabName="summary" label="Ringkasan Siswa" icon={<HomeIcon />} />
+                    <TabButton tabName="daily" label="Input Harian" icon={<PencilSquareIcon />} />
+                    <TabButton tabName="manage" label="Kelola Siswa" icon={<UsersIcon />} />
+                </nav>
             </div>
-            <div className="lg:col-span-2">
-                <Card>
-                    <h2 className="text-xl font-bold mb-4">Riwayat Laporan {selectedStudent?.fullName}</h2>
-                    {isLoading ? (
-                         <p className="text-gray-500">Memuat data...</p>
-                    ) : (
-                        <div className="space-y-4 max-h-[80vh] overflow-y-auto pr-2">
-                            {progress.length > 0 ? (
-                                progress.map(p => <ProgressCard key={p.id} report={p} />)
-                            ) : (
-                                <p className="text-gray-500">Belum ada laporan untuk siswa ini.</p>
-                            )}
-                        </div>
-                    )}
-                </Card>
+            <div>
+                {renderContent()}
             </div>
         </div>
     );
 };
+
+// Icons
+const HomeIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+    <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+  </svg>
+);
+const PencilSquareIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+    <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
+    <path fillRule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2-2H4a2 2 0 01-2-2V6z" clipRule="evenodd" />
+  </svg>
+);
+const UsersIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+        <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0z" />
+        <path fillRule="evenodd" d="M5.5 11a3.5 3.5 0 015.528-2.528 1 1 0 01.472.99V13a1 1 0 001 1h.5a1 1 0 001-1v-1.538a1 1 0 01.472-.882A3.5 3.5 0 0114.5 11H16a1 1 0 110 2h-1.5a3.5 3.5 0 01-6.472 2.118 1 1 0 01-.472-.882V13a1 1 0 00-1-1h-.5a1 1 0 00-1 1v1.538a1 1 0 01-.472.882A3.5 3.5 0 015.5 13H4a1 1 0 110-2h1.5z" clipRule="evenodd" />
+    </svg>
+);
 
 export default TeacherDashboard;

@@ -47,3 +47,8 @@ export interface SurahProgress extends BaseProgressReport {
 }
 
 export type ProgressReport = TartiliProgress | SurahProgress;
+
+export interface StudentProgressSummary {
+    student: Student;
+    latestReport: ProgressReport | null;
+}

@@ -4,7 +4,7 @@ import Dashboard from './components/Dashboard';
 
 const App: React.FC = () => {
     return (
-        <div className="min-h-screen bg-gray-50 font-sans text-gray-800">
+        <div className="min-h-screen bg-slate-50 font-sans text-slate-800">
             <Dashboard />
         </div>
     );
