@@ -18,7 +18,7 @@ export const MOCK_USERS: User[] = [
 ];
 
 export const MOCK_STUDENTS: Student[] = [
-    { id: 'siswa1', fullName: 'Budi Hartono', class: 'A', teacherId: 'guru1', parentId: 'wali1' },
+    { id: 'siswa1', fullName: 'Muhammad Amin', class: 'A', teacherId: 'guru1', parentId: 'wali1' },
     { id: 'siswa2', fullName: 'Siti Aminah', class: 'A', teacherId: 'guru1', parentId: 'wali2' },
     { id: 'siswa3', fullName: 'Charlie Wijaya', class: 'B', teacherId: 'guru1', parentId: 'wali3' },
 ];

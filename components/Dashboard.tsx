@@ -4,18 +4,18 @@ import { useAuth } from '../hooks/useAuth';
 import { UserRole } from '../types';
 import TeacherDashboard from './TeacherDashboard';
 import ParentDashboard from './ParentDashboard';
-import Header from './Header';
+import Sidebar from './Sidebar';
 
 const Dashboard: React.FC = () => {
     const { user } = useAuth();
 
     return (
-        <div className="min-h-screen bg-slate-100">
-            <Header />
-            <main className="p-4 sm:p-6 lg:p-8">
+        <div className="flex h-[850px] max-h-[90vh]">
+            <main className="flex-1 p-12 overflow-y-auto">
                 {user?.role === UserRole.GURU && <TeacherDashboard />}
                 {user?.role === UserRole.WALI_MURID && <ParentDashboard />}
             </main>
+            <Sidebar />
         </div>
     );
 };
