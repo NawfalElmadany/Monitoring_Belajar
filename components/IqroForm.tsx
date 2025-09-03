@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
-// FIX: Import IqroProgress to be used for explicit typing of the report data.
-import { Student, ReportType, ProgressReport, IqroProgress } from '../types';
+// FIX: Import TartiliProgress to be used for explicit typing of the report data.
+import { Student, ReportType, ProgressReport, TartiliProgress } from '../types';
 import { api } from '../services/api';
 import Card from './ui/Card';
 import Button from './ui/Button';
 
-interface IqroFormProps {
+interface TartiliFormProps {
     student: Student;
     teacherId: string;
     onReportAdded: (report: ProgressReport) => void;
 }
 
-const IqroForm: React.FC<IqroFormProps> = ({ student, teacherId, onReportAdded }) => {
+const TartiliForm: React.FC<TartiliFormProps> = ({ student, teacherId, onReportAdded }) => {
     const [level, setLevel] = useState(1);
     const [page, setPage] = useState(1);
     const [grade, setGrade] = useState(80);
@@ -24,10 +24,10 @@ const IqroForm: React.FC<IqroFormProps> = ({ student, teacherId, onReportAdded }
         setIsLoading(true);
         setSuccessMessage('');
 
-        // FIX: Explicitly type `reportData` to ensure `type` is correctly inferred as `ReportType.IQRO`, matching the function signature for `api.addProgressReport`.
-        const reportData: Omit<IqroProgress, 'id' | 'date'> = {
+        // FIX: Explicitly type `reportData` to ensure `type` is correctly inferred as `ReportType.TARTILI`, matching the function signature for `api.addProgressReport`.
+        const reportData: Omit<TartiliProgress, 'id' | 'date'> = {
             studentId: student.id,
-            type: ReportType.IQRO,
+            type: ReportType.TARTILI,
             level,
             page,
             grade,
@@ -38,7 +38,7 @@ const IqroForm: React.FC<IqroFormProps> = ({ student, teacherId, onReportAdded }
         try {
             const newReport = await api.addProgressReport(reportData);
             onReportAdded(newReport);
-            setSuccessMessage('Laporan Iqro berhasil disimpan!');
+            setSuccessMessage('Laporan Tartili berhasil disimpan!');
             // Reset form
             setLevel(1);
             setPage(1);
@@ -46,7 +46,7 @@ const IqroForm: React.FC<IqroFormProps> = ({ student, teacherId, onReportAdded }
             setNotes('');
             setTimeout(() => setSuccessMessage(''), 3000);
         } catch (error) {
-            console.error("Failed to submit Iqro report", error);
+            console.error("Failed to submit Tartili report", error);
         } finally {
             setIsLoading(false);
         }
@@ -54,10 +54,10 @@ const IqroForm: React.FC<IqroFormProps> = ({ student, teacherId, onReportAdded }
     
     return (
         <Card>
-            <h3 className="text-lg font-bold mb-4">Catatan Harian Iqro</h3>
+            <h3 className="text-lg font-bold mb-4">Catatan Harian Tartili</h3>
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                    <label className="block text-sm font-medium">Iqro Jilid</label>
+                    <label className="block text-sm font-medium">Tartili Jilid</label>
                     <select value={level} onChange={e => setLevel(Number(e.target.value))} className="mt-1 block w-full p-2 border border-gray-300 rounded-md">
                         {[1, 2, 3, 4, 5, 6].map(i => <option key={i} value={i}>{i}</option>)}
                     </select>
@@ -76,11 +76,11 @@ const IqroForm: React.FC<IqroFormProps> = ({ student, teacherId, onReportAdded }
                     <label className="block text-sm font-medium">Catatan Guru</label>
                     <textarea value={notes} onChange={e => setNotes(e.target.value)} rows={3} className="mt-1 block w-full p-2 border border-gray-300 rounded-md"></textarea>
                 </div>
-                <Button type="submit" isLoading={isLoading}>Simpan Laporan Iqro</Button>
+                <Button type="submit" isLoading={isLoading}>Simpan Laporan Tartili</Button>
                 {successMessage && <p className="text-green-600 text-sm mt-2">{successMessage}</p>}
             </form>
         </Card>
     );
 };
 
-export default IqroForm;
+export default TartiliForm;

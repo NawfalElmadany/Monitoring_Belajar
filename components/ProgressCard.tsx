@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { ProgressReport, ReportType } from '../types';
 
@@ -24,9 +23,9 @@ const ProgressCard: React.FC<ProgressCardProps> = ({ report, isReadOnly = false 
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 transition-shadow hover:shadow-md">
             <div className="flex justify-between items-start">
                 <div>
-                    {report.type === ReportType.IQRO ? (
+                    {report.type === ReportType.TARTILI ? (
                         <span className="inline-block bg-teal-100 text-teal-700 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full">
-                            IQRO
+                            TARTILI
                         </span>
                     ) : (
                          <span className="inline-block bg-indigo-100 text-indigo-700 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full">
@@ -41,8 +40,8 @@ const ProgressCard: React.FC<ProgressCardProps> = ({ report, isReadOnly = false 
             </div>
 
             <div className="mt-4">
-                {report.type === ReportType.IQRO ? (
-                    <h4 className="text-lg font-semibold text-gray-800">Iqro Jilid {report.level}, Halaman {report.page}</h4>
+                {report.type === ReportType.TARTILI ? (
+                    <h4 className="text-lg font-semibold text-gray-800">Tartili Jilid {report.level}, Halaman {report.page}</h4>
                 ) : (
                     <h4 className="text-lg font-semibold text-gray-800">Surat {report.surahName}, Ayat {report.startAyah}-{report.endAyah}</h4>
                 )}

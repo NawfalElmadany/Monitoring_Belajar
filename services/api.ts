@@ -1,6 +1,5 @@
-
 import { MOCK_USERS, MOCK_STUDENTS, MOCK_PROGRESS } from '../constants';
-import { User, Student, ProgressReport, IqroProgress, SurahProgress } from '../types';
+import { User, Student, ProgressReport, TartiliProgress, SurahProgress } from '../types';
 
 // Simulate network latency
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
@@ -27,7 +26,7 @@ export const api = {
             .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
     },
 
-    addProgressReport: async (report: Omit<IqroProgress, 'id' | 'date'> | Omit<SurahProgress, 'id' | 'date'>): Promise<ProgressReport> => {
+    addProgressReport: async (report: Omit<TartiliProgress, 'id' | 'date'> | Omit<SurahProgress, 'id' | 'date'>): Promise<ProgressReport> => {
         await delay(500);
         const newReport: ProgressReport = {
             ...report,

@@ -1,4 +1,3 @@
-
 import { Student, User, UserRole, ProgressReport, ReportType } from './types';
 
 export const JUZ_AMMA_SURAHS = [
@@ -26,7 +25,7 @@ export const MOCK_STUDENTS: Student[] = [
 
 export const MOCK_PROGRESS: ProgressReport[] = [
     {
-        id: 'p1', studentId: 'siswa1', date: new Date(Date.now() - 86400000 * 2).toISOString(), type: ReportType.IQRO,
+        id: 'p1', studentId: 'siswa1', date: new Date(Date.now() - 86400000 * 2).toISOString(), type: ReportType.TARTILI,
         level: 2, page: 15, grade: 85, notes: 'Sudah lancar, perlu perhatikan panjang pendek.', teacherId: 'guru1'
     },
     {
@@ -34,11 +33,11 @@ export const MOCK_PROGRESS: ProgressReport[] = [
         surahName: 'An-Nas', startAyah: 1, endAyah: 6, grade: 90, notes: 'Hafalan sangat lancar.', teacherId: 'guru1'
     },
     {
-        id: 'p3', studentId: 'siswa2', date: new Date(Date.now() - 86400000).toISOString(), type: ReportType.IQRO,
+        id: 'p3', studentId: 'siswa2', date: new Date(Date.now() - 86400000).toISOString(), type: ReportType.TARTILI,
         level: 4, page: 5, grade: 80, notes: 'Masih sedikit terbata-bata.', teacherId: 'guru1'
     },
      {
-        id: 'p4', studentId: 'siswa1', date: new Date().toISOString(), type: ReportType.IQRO,
+        id: 'p4', studentId: 'siswa1', date: new Date().toISOString(), type: ReportType.TARTILI,
         level: 2, page: 16, grade: 90, notes: 'Makhraj huruf sudah lebih baik.', teacherId: 'guru1'
     },
 ];

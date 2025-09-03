@@ -1,9 +1,8 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { api } from '../services/api';
 import { Student, ProgressReport } from '../types';
-import IqroForm from './IqroForm';
+import TartiliForm from './IqroForm';
 import SurahForm from './SurahForm';
 import ProgressCard from './ProgressCard';
 import Card from './ui/Card';
@@ -81,7 +80,7 @@ const TeacherDashboard: React.FC = () => {
                 </Card>
                 {selectedStudent && user && (
                     <>
-                        <IqroForm student={selectedStudent} teacherId={user.id} onReportAdded={handleReportAdded} />
+                        <TartiliForm student={selectedStudent} teacherId={user.id} onReportAdded={handleReportAdded} />
                         <SurahForm student={selectedStudent} teacherId={user.id} onReportAdded={handleReportAdded} />
                     </>
                 )}

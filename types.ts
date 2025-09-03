@@ -1,4 +1,3 @@
-
 export enum UserRole {
     GURU = 'guru',
     WALI_MURID = 'wali_murid'
@@ -21,7 +20,7 @@ export interface Student {
 }
 
 export enum ReportType {
-    IQRO = 'iqro',
+    TARTILI = 'tartili',
     HAFALAN = 'hafalan'
 }
 
@@ -34,8 +33,8 @@ export interface BaseProgressReport {
     teacherId: string;
 }
 
-export interface IqroProgress extends BaseProgressReport {
-    type: ReportType.IQRO;
+export interface TartiliProgress extends BaseProgressReport {
+    type: ReportType.TARTILI;
     level: number;
     page: number;
 }
@@ -47,4 +46,4 @@ export interface SurahProgress extends BaseProgressReport {
     endAyah: number;
 }
 
-export type ProgressReport = IqroProgress | SurahProgress;
+export type ProgressReport = TartiliProgress | SurahProgress;
