@@ -1,0 +1,5 @@
+{
+  "name": "Aplikasi Catatan Mengaji",
+  "description": "A web application for teachers to log and parents to track students' daily progress in learning to recite the Quran (Iqro' and Surah memorization).",
+  "requestFramePermissions": []
+}
